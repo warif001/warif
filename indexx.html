@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Junior's Matcha | المتجر الرسمي</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+        :root {
+            --bg-main: #fce4ec;
+            --bg-card: #ffffff;
+            --text-main: #388e3c;
+            --text-muted: #555555;
+            --matcha-green: #a5d6a7;
+            --matcha-dark: #81c784;
+            --accent-pink: #f06292;
+            --border-color: #f8bbd0;
+            --shadow: 0 10px 30px rgba(240, 98, 146, 0.1);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #e8f5e9;
+            --text-muted: #aaaaaa;
+            --matcha-green: #4caf50;
+            --matcha-dark: #388e3c;
+            --accent-pink: #ec407a;
+            --border-color: #333333;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            transition: var(--transition);
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* الهيدر */
+        header {
+            background: var(--bg-card);
+            padding: 15px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--matcha-green); }
+        .brand span { font-size: 1.6rem; font-weight: 800; color: var(--accent-pink); }
+
+        .nav-controls { display: flex; align-items: center; gap: 15px; }
+        .theme-toggle {
+            background: transparent; border: 2px solid var(--matcha-green);
+            color: var(--text-main); width: 45px; height: 45px; border-radius: 50%;
+            cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+        }
+        .theme-toggle:hover { background: var(--matcha-green); color: #fff; }
+
+        .cart-btn-header {
+            background: var(--matcha-green); color: #fff; border: none; padding: 10px 25px;
+            border-radius: 30px; cursor: pointer; font-weight: 700; font-size: 1rem;
+            display: flex; align-items: center; gap: 10px; position: relative;
+        }
+        .cart-btn-header:hover { background: var(--matcha-dark); }
+
+        #cart-count {
+            background: var(--accent-pink); color: #fff; font-size: 0.8rem; padding: 2px 8px;
+            border-radius: 50%; position: absolute; top: -8px; right: -8px; font-weight: bold;
+        }
+
+        /* السلة الجانبية */
+        #side-cart {
+            position: fixed; left: -100%; top: 0; width: 350px; height: 100%;
+            background: var(--bg-card); z-index: 2000; padding: 30px;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2); display: flex; flex-direction: column;
+        }
+        #side-cart.open { left: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
+        .close-cart { cursor: pointer; color: var(--accent-pink); font-weight: bold; font-size: 1.2rem; }
+        #cart-items-list { flex-grow: 1; overflow-y: auto; }
+        .cart-item { background: var(--bg-main); padding: 15px; border-radius: 15px; margin-bottom: 10px; font-weight: 500; }
+        .cart-item-flex { display: flex; justify-content: space-between; align-items: flex-start; }
+        .cart-footer { border-top: 2px solid var(--border-color); padding-top: 20px; margin-top: 20px; }
+        .total-price-box { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; }
+        .checkout-btn { background: var(--accent-pink); color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+
+        section { padding: 60px 8%; }
+        .section-title { text-align: center; font-size: 2rem; color: var(--accent-pink); margin-bottom: 40px; font-weight: 800; }
+
+        .hero-section { text-align: center; padding-top: 40px; padding-bottom: 20px; }
+        .hero-image { width: 100%; max-width: 900px; border-radius: 40px; box-shadow: var(--shadow); border: 8px solid var(--bg-card); }
+
+        .story-container { max-width: 800px; margin: 0 auto; text-align: center; background: var(--bg-card); padding: 50px; border-radius: 40px; box-shadow: var(--shadow); border: 1px solid var(--border-color); }
+        .story-container p { font-size: 1.2rem; color: var(--text-muted); line-height: 1.8; }
+
+        /* المنتجات */
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .product-card { background: var(--bg-card); border-radius: 30px; padding: 30px 20px; text-align: center; box-shadow: var(--shadow); border: 2px solid transparent; }
+        .product-card:hover { border-color: var(--matcha-green); transform: translateY(-10px); }
+        .item-icon { font-size: 3.5rem; margin-bottom: 15px; display: inline-block; background: var(--bg-main); width: 90px; height: 90px; line-height: 90px; border-radius: 50%; }
+        .product-price { font-weight: 800; color: var(--accent-pink); font-size: 1.4rem; margin-bottom: 20px; }
+        .add-to-cart-btn { background: var(--matcha-green); color: #fff; border: none; width: 100%; padding: 12px; border-radius: 20px; cursor: pointer; font-weight: 700; font-size: 1rem; }
+        .add-to-cart-btn:hover { background: var(--matcha-dark); }
+
+        /* التقييمات */
+        .reviews-container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .review-card { background: var(--bg-card); padding: 30px; border-radius: 30px; width: 350px; box-shadow: var(--shadow); border-right: 5px solid var(--accent-pink); }
+        .review-card p { font-style: italic; color: var(--text-muted); font-size: 1.1rem; }
+        .review-author { display: block; margin-top: 15px; font-weight: 800; color: var(--text-main); }
+        
+        footer { text-align: center; padding: 40px; color: var(--text-muted); font-weight: 500; border-top: 1px solid var(--border-color); margin-top: 40px; }
+
+        /* نافذة الإضافات (Modal) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 3000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: var(--bg-card); padding: 30px; border-radius: 30px;
+            width: 90%; max-width: 400px; text-align: center;
+            box-shadow: var(--shadow); position: relative;
+            transform: translateY(30px); transition: 0.4s;
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .extra-option {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg-main); padding: 12px 20px; border-radius: 20px;
+            margin-bottom: 12px; cursor: pointer; border: 1px solid var(--border-color);
+            transition: 0.2s;
+        }
+        .extra-option:hover { border-color: var(--matcha-green); }
+        .extra-option input { accent-color: var(--matcha-green); width: 20px; height: 20px; cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+<!-- نافذة الإضافات (Modal) -->
+<div class="modal-overlay" id="extras-modal">
+    <div class="modal-content">
+        <div class="close-cart" onclick="closeModal()" style="position:absolute; top:20px; left:20px;">✕</div>
+        <div class="item-icon" style="font-size: 2.5rem; width: 60px; height: 60px; line-height: 60px;">✨</div>
+        <h3 id="modal-item-name" style="color: var(--accent-pink); margin: 0 0 10px 0;">اسم المشروب</h3>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">هل تود تخصيص كوبك؟ (اختياري)</p>
+        
+        <label class="extra-option">
+            <span>سيرب فانيلا (+3 ر.س)</span>
+            <input type="checkbox" class="extra-checkbox" value="3" data-name="سيرب فانيلا">
+        </label>
+        <label class="extra-option">
+            <span>حليب نباتي (+5 ر.س)</span>
+            <input type="checkbox" class="extra-checkbox" value="5" data-name="حليب نباتي">
+        </label>
+        <label class="extra-option">
+            <span>طبقة كريمة (+4 ر.س)</span>
+            <input type="checkbox" class="extra-checkbox" value="4" data-name="طبقة كريمة">
+        </label>
+        <label class="extra-option">
+            <span>شوت ماتشا إضافي (+7 ر.س)</span>
+            <input type="checkbox" class="extra-checkbox" value="7" data-name="شوت إضافي">
+        </label>
+
+        <button class="add-to-cart-btn" style="margin-top:20px; font-size: 1.1rem; padding: 15px;" onclick="confirmAddToCart()">تأكيد وإضافة للسلة</button>
+    </div>
+</div>
+
+<!-- السلة الجانبية -->
+<div id="side-cart">
+    <div class="cart-header">
+        <h2 style="margin: 0; color: var(--text-main);">سلتك 🛒</h2>
+        <div class="close-cart" onclick="toggleCart()">✕</div>
+    </div>
+    <div id="cart-items-list">
+        <p style="text-align: center; color: var(--text-muted); margin-top: 50px;">السلة فارغة حالياً..</p>
+    </div>
+    <div class="cart-footer">
+        <div class="total-price-box">
+            <span>المجموع:</span>
+            <span><span id="total-price">0</span> ر.س</span>
+        </div>
+        <button class="checkout-btn">إتمام الطلب بأمان</button>
+    </div>
+</div>
+
+<!-- الهيدر -->
+<header>
+    <div class="brand">
+        <img src="logo.jpg" alt="Junior's Matcha Logo">
+        <span>جونيورز ماتشا</span>
+    </div>
+    <div class="nav-controls">
+        <button class="theme-toggle" onclick="toggleTheme()" title="تغيير الوضع">
+            <span id="theme-icon">🌙</span>
+        </button>
+        <button class="cart-btn-header" onclick="toggleCart()">
+            السلة
+            <span id="cart-count">0</span>
+        </button>
+    </div>
+</header>
+
+<!-- البوستر -->
+<div class="hero-section">
+    <img src="poster.jpg" alt="Junior's Matcha Poster" class="hero-image">
+</div>
+
+<!-- قصة المتجر -->
+<section>
+    <div class="story-container">
+        <h2 class="section-title" style="margin-bottom: 20px;">قصتنا ✨</h2>
+        <p>
+            بدأت رحلة <b>جونيورز ماتشا</b> من شغف البحث عن كوب الماتشا المثالي. لم نرد مجرد مشروب، بل أردنا تقديم تجربة تجمع بين جودة الماتشا اليابانية الأصلية وجمال التصميم الذي يبعث على الهدوء.
+        </p>
+    </div>
+</section>
+
+<!-- قائمة المنتجات -->
+<section>
+    <h2 class="section-title">قائمة الماتشا 🍵</h2>
+    <div class="menu-grid">
+        <div class="product-card">
+            <div class="item-icon">🍃</div>
+            <h3>جونيور كلاسيك</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">الطعم الأصلي مع حليب كريمي</p>
+            <div class="product-price">24 ر.س</div>
+            <button class="add-to-cart-btn" onclick="openExtrasModal(this, 'جونيور كلاسيك', 24)">إضافة للسلة</button>
+        </div>
+
+        <div class="product-card">
+            <div class="item-icon">🌸</div>
+            <h3>سحابة الفراولة</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">بيوريه الفراولة الطازج</p>
+            <div class="product-price">28 ر.س</div>
+            <button class="add-to-cart-btn" onclick="openExtrasModal(this, 'سحابة الفراولة', 28)">إضافة للسلة</button>
+        </div>
+
+        <div class="product-card">
+            <div class="item-icon">🌬️</div>
+            <h3>ماتشا بريز</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">انتعاش صيفي فريد ومميز</p>
+            <div class="product-price">26 ر.س</div>
+            <button class="add-to-cart-btn" onclick="openExtrasModal(this, 'ماتشا بريز', 26)">إضافة للسلة</button>
+        </div>
+
+        <div class="product-card">
+            <div class="item-icon">🍬</div>
+            <h3>كراميل مملح</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">توازن بين الحلاوة والملوحة</p>
+            <div class="product-price">30 ر.س</div>
+            <button class="add-to-cart-btn" onclick="openExtrasModal(this, 'كراميل مملح', 30)">إضافة للسلة</button>
+        </div>
+    </div>
+</section>
+
+<!-- التقييمات -->
+<section style="padding-top: 0;">
+    <h2 class="section-title">قالوا عن جونيورز ماتشا 🤍</h2>
+    <div class="reviews-container">
+        <div class="review-card">
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <p>"أفضل ماتشا فراولة جربتها في حياتي! التوازن بين الحلاوة ونكهة الماتشا خيالي، والتغليف يفتح النفس."</p>
+            <span class="review-author">- سارة الهاشمي</span>
+        </div>
+        <div class="review-card">
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <p>"متجر هادئ وتجربة شراء سلسة جداً. الماتشا كلاسيك عندهم جودتها عالية جداً، اعتمدتهم بدون تردد."</p>
+            <span class="review-author">- خالد عبدالله</span>
+        </div>
+    </div>
+</section>
+
+<footer>
+    جميع الحقوق محفوظة لـ Junior's Matcha © 2026 | صُنع بكل هدوء 🍵
+</footer>
+
+<script>
+    let cart = [];
+    let total = 0;
+    let currentItem = null;
+    let currentBtn = null;
+
+    function toggleCart() {
+        document.getElementById('side-cart').classList.toggle('open');
+    }
+
+    function toggleTheme() {
+        const body = document.body;
+        const icon = document.getElementById('theme-icon');
+        if (body.getAttribute('data-theme') === 'dark') {
+            body.removeAttribute('data-theme');
+            icon.innerText = '🌙';
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            icon.innerText = '☀️';
+        }
+    }
+
+    function openExtrasModal(btnElement, name, price) {
+        currentItem = { name, price };
+        currentBtn = btnElement;
+        
+        document.getElementById('modal-item-name').innerText = name;
+        
+        document.querySelectorAll('.extra-checkbox').forEach(cb => cb.checked = false);
+        
+        document.getElementById('extras-modal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('extras-modal').classList.remove('active');
+    }
+
+    function confirmAddToCart() {
+        let finalPrice = currentItem.price;
+        let selectedExtras = [];
+        
+        document.querySelectorAll('.extra-checkbox:checked').forEach(cb => {
+            finalPrice += parseInt(cb.value);
+            selectedExtras.push(cb.getAttribute('data-name'));
+        });
+
+        let itemNameDisplay = currentItem.name;
+        if (selectedExtras.length > 0) {
+            itemNameDisplay += `<div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 5px;">+ ${selectedExtras.join('، ')}</div>`;
+        }
+
+        cart.push({ name: itemNameDisplay, price: finalPrice });
+        total += finalPrice;
+        updateCartUI();
+        
+        closeModal();
+
+        const originalText = currentBtn.innerText;
+        currentBtn.innerText = "تمت الإضافة! ✓";
+        currentBtn.style.background = "var(--accent-pink)";
+        
+        setTimeout(() => {
+            currentBtn.innerText = originalText;
+            currentBtn.style.background = ""; 
+        }, 1500);
+    }
+
+    function updateCartUI() {
+        const list = document.getElementById('cart-items-list');
+        const count = document.getElementById('cart-count');
+        const totalDisp = document.getElementById('total-price');
+        
+        if (cart.length === 0) {
+            list.innerHTML = '<p style="text-align: center; color: var(--text-muted); margin-top: 50px;">السلة فارغة حالياً..</p>';
+        } else {
+            list.innerHTML = "";
+            cart.forEach((item) => {
+                list.innerHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-flex">
+                            <div>${item.name}</div>
+                            <div style="color: var(--accent-pink); font-weight: bold; white-space: nowrap; margin-right: 15px;">${item.price} ر.س</div>
+                        </div>
+                    </div>`;
+            });
+        }
+        
+        count.innerText = cart.length;
+        totalDisp.innerText = total;
+    }
+</script>
+</body>
+</html>
